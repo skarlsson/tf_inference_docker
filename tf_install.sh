@@ -23,9 +23,9 @@ for python_version in python3; do
   # =============================================================
   # CONFIGURATION
   # =============================================================
-  TF_ROOT=${opt}/tensorflow
+  #TF_ROOT=tmp/tf
 
-  cd $TF_ROOT
+  #cd $TF_ROOT
 
   export PYTHON_BIN_PATH=$(which ${python_version})
   export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'import site; print(site.getsitepackages()[0])')"
@@ -80,7 +80,7 @@ for python_version in python3; do
   # build c++ library
   #bazel build  -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda  tensorflow:libtensorflow_cc.so
   #bazel build  -c opt --copt=-mfpmath=both --copt=-msse4.2 tensorflow:libtensorflow_cc.so
-  bazel build --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow:libtensorflow_cc.so
+  bazel build  --jobs 16 --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow:libtensorflow_cc.so
   # build TF pip package
   #bazel-bin/tensorflow/tools/pip_package/build_pip_package ${TF_ROOT}/pip/tensorflow_pkg
 
