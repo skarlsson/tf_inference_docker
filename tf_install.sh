@@ -79,7 +79,8 @@ for python_version in python3; do
   #bazel build  -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda //tensorflow/tools/pip_package:build_pip_package
   # build c++ library
   #bazel build  -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda  tensorflow:libtensorflow_cc.so
-  bazel build  -c opt --copt=-mfpmath=both --copt=-msse4.2 tensorflow:libtensorflow_cc.so
+  #bazel build  -c opt --copt=-mfpmath=both --copt=-msse4.2 tensorflow:libtensorflow_cc.so
+  bazel build --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow:libtensorflow_cc.so
   # build TF pip package
   #bazel-bin/tensorflow/tools/pip_package/build_pip_package ${TF_ROOT}/pip/tensorflow_pkg
 
