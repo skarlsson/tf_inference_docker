@@ -4,19 +4,20 @@ WORKDIR /src
 
 MAINTAINER sk svante.karlsson@csi.se
 
+RUN apt-get install curl
+RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
+RUN curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
+
+RUN curl -O https://repo.anaconda.com/archive/Anaconda3-5.3.1-Linux-x86_64.sh && \
+bash Anaconda3-5.3.1-Linux-x86_64.sh -b && \
+rm Anaconda3-5.3.1-Linux-x86_64.sh
+
 RUN apt-get update &&  apt-get install -y sudo pax-utils automake autogen shtool libtool git wget cmake unzip build-essential pkg-config \
       libboost-all-dev g++ python-dev autotools-dev libicu-dev zlib1g-dev openssl libssl-dev \
       libbz2-dev libsnappy-dev libgoogle-glog-dev libgflags-dev libjansson-dev libcurl4-openssl-dev libc-ares-dev \
       liblzma-dev libpq-dev freetds-dev
 
-RUN apt-get install curl
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
-RUN curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
-
-RUN curl -O https://repo.anaconda.com/archive/Anaconda2-5.3.1-Linux-x86_64.sh
-RUN bash Anaconda2-5.3.1-Linux-x86_64.sh -b
-
-RUN apt-get update && apt-get install -y openjdk-8-jdk libsuitesparse-dev lua5.3-dev bazel
+RUN apt-get install -y openjdk-8-jdk libsuitesparse-dev lua5.3-dev bazel
 
 #RUN pip install -U --user pip six numpy wheel mock
 #RUN pip install -U --user keras_applications==1.0.6 --no-deps
@@ -24,5 +25,8 @@ RUN apt-get update && apt-get install -y openjdk-8-jdk libsuitesparse-dev lua5.3
 
 COPY 3rdparty_install.sh 	.
 RUN ./3rdparty_install.sh
+
+COPY tf_install.sh 	.
+RUN ./tf_install.sh.sh
 
 
