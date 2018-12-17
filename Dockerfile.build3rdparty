@@ -27,6 +27,6 @@ COPY 3rdparty_install.sh 	.
 RUN ./3rdparty_install.sh
 
 COPY tf_install.sh 	.
-RUN ./tf_install.sh.sh
+RUN ./tf_install.sh
 
 
