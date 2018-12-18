@@ -1,0 +1,21 @@
+FROM tf_serving_client-build3rdparty-ubuntu
+
+WORKDIR /src
+
+MAINTAINER sk svante.karlsson@csi.se
+
+RUN LD_LIBRARY_PATH= \ 
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib  && \
+\
+    strip --strip-all /usr/local/lib/*.so* && \
+    strip --strip-unneeded /usr/local/bin/*
+
+RUN runDeps="$( \
+      scanelf --needed --nobanner --recursive /usr/local \
+        | awk '{ gsub(/,/, "\n", $2); print $2 }' \
+        | sort -u \
+        | xargs -r dpkg -S | cut -d : -f 1  \
+        | sort -u \
+      )" && \
+     echo "$runDeps" > runDeps
+

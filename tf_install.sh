@@ -34,6 +34,9 @@ for python_version in python3; do
 #  export CUDA_TOOLKIT_PATH=${opt}/cuda/toolkit_8.0/cuda
 #  export CUDNN_INSTALL_PATH=${opt}/cuda/cudnn/6/cuda
 
+  export TF_NEED_IGNITE=0
+  export TF_NEED_ROCM=0
+  export TF_DOWNLOAD_CLANG=0
   export TF_NEED_GCP=0
   export TF_NEED_CUDA=0
 #  export TF_CUDA_VERSION="$($CUDA_TOOLKIT_PATH/bin/nvcc --version | sed -n 's/^.*release \(.*\),.*/\1/p')"
@@ -80,9 +83,23 @@ for python_version in python3; do
   # build c++ library
   #bazel build  -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda  tensorflow:libtensorflow_cc.so
   #bazel build  -c opt --copt=-mfpmath=both --copt=-msse4.2 tensorflow:libtensorflow_cc.so
-  bazel build  --jobs 16 --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow:libtensorflow_cc.so
+  bazel build  --jobs 8 --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow:libtensorflow_cc.so
+  #bazel build  --jobs 8 --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow/core:all
+
+  #bazel build  --jobs 8 --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow/core:lib
+  #bazel build  --jobs 8 --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow/core:protos_all_cc
+
   # build TF pip package
   #bazel-bin/tensorflow/tools/pip_package/build_pip_package ${TF_ROOT}/pip/tensorflow_pkg
+
+  sudo mkdir /usr/local/include/tf
+  sudo cp -r bazel-genfiles/ /usr/local/include/tf/
+  sudo cp -r tensorflow /usr/local/include/tf/
+  sudo cp -r third_party /usr/local/include/tf/
+  #patch
+  sudo cp -r bazel-genfiles/tensorflow /usr/local/include/tf
+
+  sudo cp -r bazel-bin/tensorflow/libtensorflow_cc.so /usr/local/lib/
 
 done
 
